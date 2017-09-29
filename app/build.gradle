@@ -52,8 +52,8 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.5.1'
 
     //UI
-    compile 'com.jakewharton:butterknife:8.0.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.0.1'
+    compile 'com.jakewharton:butterknife:6.1.0'
+    //annotationProcessor 'com.jakewharton:butterknife-compiler:6.1.0'
 
     //Dagger
     apt 'com.google.dagger:dagger-compiler:2.2'

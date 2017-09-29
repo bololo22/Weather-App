@@ -15,7 +15,7 @@ public class ResponseList implements Parcelable
 
     @SerializedName("query")
     @Expose
-    private Query query;
+    private QueryList query;
     public final static Parcelable.Creator<ResponseList> CREATOR = new Creator<ResponseList>() {
 
 
@@ -34,17 +34,17 @@ public class ResponseList implements Parcelable
             ;
 
     protected ResponseList(Parcel in) {
-        this.query = ((Query) in.readValue((Query.class.getClassLoader())));
+        this.query = ((QueryList) in.readValue((QueryList.class.getClassLoader())));
     }
 
     public ResponseList() {
     }
 
-    public Query getQuery() {
+    public QueryList getQuery() {
         return query;
     }
 
-    public void setQuery(Query query) {
+    public void setQuery(QueryList query) {
         this.query = query;
     }
 

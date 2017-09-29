@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Weather App</string>
+    <string name="city">City</string>
+    <string name="add_city">Add City</string>
+
+    <string name="button_undo">UNDO</string>
 </resources>

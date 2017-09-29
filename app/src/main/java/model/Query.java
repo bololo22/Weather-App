@@ -21,7 +21,7 @@ public class Query implements Parcelable
     private String lang;
     @SerializedName("results")
     @Expose
-    private ResultsList results;
+    private Results results;
     public final static Creator<Query> CREATOR = new Creator<Query>() {
 
 
@@ -43,7 +43,7 @@ public class Query implements Parcelable
         this.count = ((long) in.readValue((long.class.getClassLoader())));
         this.created = ((String) in.readValue((String.class.getClassLoader())));
         this.lang = ((String) in.readValue((String.class.getClassLoader())));
-        this.results = ((ResultsList) in.readValue((ResultsList.class.getClassLoader())));
+        this.results = ((Results) in.readValue((Results.class.getClassLoader())));
     }
 
     public Query() {
@@ -73,11 +73,11 @@ public class Query implements Parcelable
         this.lang = lang;
     }
 
-    public ResultsList getResults() {
+    public Results getResults() {
         return results;
     }
 
-    public void setResults(ResultsList results) {
+    public void setResults(Results results) {
         this.results = results;
     }
 

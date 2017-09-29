@@ -13,7 +13,7 @@ import retrofit2.http.Query;
 
 public interface WeatherService {
     String BASE_URL = "https://query.yahooapis.com/v1/public/yql?q=";
-    String SUB_URL = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text in (\"nome, ak\", \"los angeles, ca\"))";
+    String SUB_URL = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text in (\"nome, ak\"))";
     String LAST_URL = "&format=json";
     String FULL_URL = BASE_URL + SUB_URL + LAST_URL;
 

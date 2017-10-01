@@ -2,7 +2,6 @@ package com.example.manolo.weather.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.manolo.weather.App;
@@ -17,9 +16,9 @@ import java.util.List;
 import butterknife.ButterKnife;
 import model.Channel;
 import model.Query;
+import util.Settings;
 
 public class MainActivity extends AppCompatActivity implements ShowCitiesWeatherFragment.OnFABClickListener, AddCityFragment.OnSearchCityListener {
-
     private boolean mShowingAddCityFragment = false;
     private boolean mShowingCityWeatherDeailedFragment = false;
     private boolean mShowingCitiesWeatherFragment = false;
@@ -29,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements ShowCitiesWeather
     CityWeatherDetailedFragment cityWeatherDetailedFragment;
 
     List<Channel> mCitiesList = new ArrayList<Channel>();
+
+    Settings settings;
 
     public MainActivity(){
     }
@@ -40,7 +41,11 @@ public class MainActivity extends AppCompatActivity implements ShowCitiesWeather
         ButterKnife.inject(this);
 
         ((App) getApplication()).getAppComponent().inject(this);
+        settings = new Settings(this);
+        setShowCitiesWeatherFragment();
+    }
 
+    private void setShowCitiesWeatherFragment() {
         showCitiesWeatherFragment = new ShowCitiesWeatherFragment(this);
         getFragmentManager()
                 .beginTransaction()
@@ -48,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements ShowCitiesWeather
                 .commitAllowingStateLoss();
 
         mShowingCitiesWeatherFragment = true;
+
+        //mCitiesList = settings.loadCity();
     }
 
     @Override

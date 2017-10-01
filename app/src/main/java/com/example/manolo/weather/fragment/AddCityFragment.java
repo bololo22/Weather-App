@@ -42,8 +42,8 @@ public class AddCityFragment extends Fragment {
 
     @Inject
     Retrofit retrofit;
-    String cities = "\"nome, ak\""; //, "
-    String queryCities = String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text in (\'%s\'))", cities);
+    String city; //= "\"nome, ak\""; //, "
+    String queryCities;
 
     public AddCityFragment(Activity activity){
         this.mActivity = activity;
@@ -77,7 +77,10 @@ public class AddCityFragment extends Fragment {
 
     @OnClick(R.id.newFloatingActionButtonSearch)
     public void onSearchCityWeatherClick(){
-        Call<model.Response> channel = retrofit.create(WeatherService.class).getWeather(queryCities, "json");
+        city = searchCityEditText.getText().toString();
+        queryCities = String.format(WeatherService.SUB_URL, city);
+
+        Call<model.Response> channel = retrofit.create(WeatherService.class).getWeather(queryCities, WeatherService.FORMAT);
 
         channel.enqueue(new Callback<model.Response>() {
             @Override

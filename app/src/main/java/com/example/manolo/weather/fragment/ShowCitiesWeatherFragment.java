@@ -28,7 +28,7 @@ import timber.log.Timber;
  * Created by manolofernandez on 9/27/17.
  */
 
-public class ShowCitiesWeatherFragment extends Fragment {
+public class ShowCitiesWeatherFragment extends Fragment implements CitiesAdapter.OnCityClickListener{
     OnShowCitiesFragmentAddListener mOnShowCitiesFragmentAddListenerCallback;
     Activity mActivity;
     List<Channel> mChannelList;
@@ -50,7 +50,7 @@ public class ShowCitiesWeatherFragment extends Fragment {
         try{
             mOnShowCitiesFragmentAddListenerCallback = (OnShowCitiesFragmentAddListener) mActivity;
             this.mChannelList = new ArrayList<>();
-            citiesAdapter = new CitiesAdapter(mActivity, mChannelList);
+            citiesAdapter = new CitiesAdapter(mActivity, mChannelList, this);
 
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString()
@@ -85,17 +85,13 @@ public class ShowCitiesWeatherFragment extends Fragment {
         citiesAdapter.notifyDataSetChanged();
     }
 
-    public void setRecyclerView(List<Channel> mCitiesList){
-
+    @Override
+    public void onCityClickListener(View v, int position) {
+        mOnShowCitiesFragmentAddListenerCallback.onCityClick(mChannelList.get(position));
     }
 
     public interface OnShowCitiesFragmentAddListener {
         void onAddCityButtonClick();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Timber.d("");
+        void onCityClick(Channel channel);
     }
 }

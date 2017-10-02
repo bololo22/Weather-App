@@ -33,13 +33,10 @@ import timber.log.Timber;
 import util.Settings;
 
 public class MainActivity extends AppCompatActivity implements ShowCitiesWeatherFragment.OnShowCitiesFragmentAddListener, AddCityFragment.OnSearchCityListener {
-    private boolean mShowingAddCityFragment = false;
-    private boolean mShowingCityWeatherDeailedFragment = false;
-    private boolean mShowingCitiesWeatherFragment = false;
-
     ShowCitiesWeatherFragment showCitiesWeatherFragment;
     AddCityFragment addCityFragment;
     CityWeatherDetailedFragment cityWeatherDetailedFragment;
+
     List<Channel> mCitiesList = new ArrayList<Channel>();
     Settings settings;
 
@@ -67,16 +64,7 @@ public class MainActivity extends AppCompatActivity implements ShowCitiesWeather
                 .add(R.id.container, showCitiesWeatherFragment)
                 .commitAllowingStateLoss();
 
-        mShowingCitiesWeatherFragment = true;
         retrieveWeatherFromCitiesSaved();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(showCitiesWeatherFragment != null && showCitiesWeatherFragment.isVisible()){
-            mShowingCitiesWeatherFragment = true;
-        }
-        super.onBackPressed();
     }
 
     @Override
@@ -87,14 +75,20 @@ public class MainActivity extends AppCompatActivity implements ShowCitiesWeather
                 .replace(R.id.container, addCityFragment)
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
-        mShowingAddCityFragment = true;
-        mShowingCitiesWeatherFragment = false;
+    }
+
+    @Override
+    public void onCityClick(Channel channel) {
+        cityWeatherDetailedFragment = new CityWeatherDetailedFragment(this, channel);
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, cityWeatherDetailedFragment)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
     }
 
     @Override
     public void onSearchCityListener(Query response, String city) {
-        mShowingAddCityFragment = true;
-        mShowingCitiesWeatherFragment = false;
         processCityWeatherResponse(response, city);
         getFragmentManager().popBackStack();
     }
@@ -122,11 +116,7 @@ public class MainActivity extends AppCompatActivity implements ShowCitiesWeather
             }
 
             mCitiesList.add(channel);
-            if(mCitiesList.size() == 1){
-                showCitiesWeatherFragment.updateRecyclerView(mCitiesList);
-            }else {
-                showCitiesWeatherFragment.updateRecyclerView(mCitiesList);
-            }
+            showCitiesWeatherFragment.updateRecyclerView(mCitiesList);
         }
     }
 

@@ -3,5 +3,8 @@
     <string name="city">City</string>
     <string name="add_city">Add City</string>
 
+    <string name="high">High: %1$s</string>
+    <string name="low">Low: %1$s</string>
+
     <string name="button_undo">UNDO</string>
 </resources>

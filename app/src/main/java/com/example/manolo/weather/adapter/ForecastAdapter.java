@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -14,67 +13,64 @@ import android.widget.TextView;
 import com.example.manolo.weather.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import model.Channel;
+import model.channel.item.Forecast;
 
 /**
- * Created by manolofernandez on 9/28/17.
+ * Created by manolofernandez on 10/2/17.
  */
 
-public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.ViewHolder> {
-    List<Channel> mCitiesList;
+public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHolder> {
     Activity mActivity;
-    OnCityClickListener onCityClickListener;
+    List<Forecast> mForecastList;
 
-    public CitiesAdapter(Activity mActivity, List<Channel> mCitiesList, OnCityClickListener onCityClickListener) {
+    public ForecastAdapter(Activity mActivity, List<Forecast> mForecastList) {
         this.mActivity = mActivity;
-        this.mCitiesList = mCitiesList;
-        this.onCityClickListener = onCityClickListener;
+        this.mForecastList = mForecastList;
     }
 
     @Override
-    public CitiesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cities_adapter_container_item, parent, false);
-        return new CitiesAdapter.ViewHolder(view);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cities_forecast_item, parent, false);
+        return new ForecastAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(CitiesAdapter.ViewHolder holder, int position) {
-        Channel city = mCitiesList.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Forecast forecast = mForecastList.get(position);
 
-        holder.cityName.setText(city.getLocation().getCity() + ", " + city.getLocation().getRegion());
-        transformCodeToIcon(holder.weatherIcon, city.getItem().getCondition().getCode());
-        holder.temperatureText.setText(city.getItem().getCondition().getTemp() + " \u00B0" + city.getUnits().getTemperature());
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onCityClickListener.onCityClickListener(v, holder.getLayoutPosition());
-            }
-        });
+        holder.day_text.setText(forecast.getDay());
+        holder.date_text.setText(forecast.getDate());
+        transformCodeToIcon(holder.city_weather_image, forecast.getCode());
+        holder.code_text.setText(forecast.getText());
+        holder.high_text.setText(String.format(mActivity.getResources().getString(R.string.high),
+                forecast.getHigh()));
+        holder.low_text.setText(String.format(mActivity.getResources().getString(R.string.low),
+                forecast.getLow()));
     }
 
     @Override
     public int getItemCount() {
-        return mCitiesList.size();
+        return mForecastList.size();
     }
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        @InjectView(R.id.city_item_layout)
-        RelativeLayout cityItem;
-        @InjectView(R.id.city_text_view)
-        TextView cityName;
+        @InjectView(R.id.day_text)
+        TextView day_text;
+        @InjectView(R.id.date_text)
+        TextView date_text;
         @InjectView(R.id.city_weather_image)
-        ImageView weatherIcon;
-        @InjectView(R.id.temperature_text_view)
-        TextView temperatureText;
-        @InjectView(R.id.undo_button)
-        Button undoButton;
+        ImageView city_weather_image;
+        @InjectView(R.id.code_text)
+        TextView code_text;
+        @InjectView(R.id.high_text)
+        TextView high_text;
+        @InjectView(R.id.low_text)
+        TextView low_text;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -178,9 +174,5 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.ViewHolder
                 break;
 
         }
-    }
-
-    public interface OnCityClickListener{
-        void onCityClickListener(View v, int position);
     }
 }

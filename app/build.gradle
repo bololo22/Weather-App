@@ -53,6 +53,7 @@ dependencies {
 
     //UI
     compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.squareup.picasso:picasso:2.3.3'
     //annotationProcessor 'com.jakewharton:butterknife-compiler:6.1.0'
 
     //Dagger

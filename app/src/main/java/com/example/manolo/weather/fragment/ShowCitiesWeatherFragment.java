@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,22 +40,34 @@ public class ShowCitiesWeatherFragment extends Fragment implements CitiesAdapter
     @InjectView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
+    public ShowCitiesWeatherFragment(){
+        Timber.d("");
+    }
+
     public ShowCitiesWeatherFragment(Activity activity){
         this.mActivity = activity;
-        mChannelList = new ArrayList<>();
+        mOnShowCitiesFragmentAddListenerCallback = (OnShowCitiesFragmentAddListener) mActivity;
+        this.mChannelList = new ArrayList<>();
+        citiesAdapter = new CitiesAdapter(mActivity, mChannelList, this);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            mOnShowCitiesFragmentAddListenerCallback = (OnShowCitiesFragmentAddListener) mActivity;
-            this.mChannelList = new ArrayList<>();
-            citiesAdapter = new CitiesAdapter(mActivity, mChannelList, this);
 
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(savedInstanceState != null){
+            mChannelList = savedInstanceState.getParcelableArrayList("ChannelList");
         }
     }
 
@@ -64,8 +77,19 @@ public class ShowCitiesWeatherFragment extends Fragment implements CitiesAdapter
         super.onCreateView(inflater, container, savedInstanceState);
         View view =  inflater.inflate(R.layout.fragment_show_cities_weather, container, false);
         ButterKnife.inject(this, view);
+
+        if(savedInstanceState != null){
+            this.mActivity = getActivity();
+            mOnShowCitiesFragmentAddListenerCallback = (OnShowCitiesFragmentAddListener) mActivity;
+            if(mChannelList == null) {
+                this.mChannelList = savedInstanceState.getParcelableArrayList("ChannelList");
+            }
+            citiesAdapter = new CitiesAdapter(mActivity, mChannelList, this);
+        }
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.setAdapter(citiesAdapter);
+
         return view;
     }
 
@@ -88,6 +112,12 @@ public class ShowCitiesWeatherFragment extends Fragment implements CitiesAdapter
     @Override
     public void onCityClickListener(View v, int position) {
         mOnShowCitiesFragmentAddListenerCallback.onCityClick(mChannelList.get(position));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("ChannelList", (ArrayList<? extends Parcelable>) mChannelList);
     }
 
     public interface OnShowCitiesFragmentAddListener {

@@ -52,6 +52,8 @@ public class CityWeatherDetailedFragment extends Fragment {
     @InjectView(R.id.recyclerViewForecast)
     RecyclerView mRecyclerViewForecast;
 
+    public CityWeatherDetailedFragment(){}
+
     public CityWeatherDetailedFragment(Activity activity, Channel channel){
         this.mActivity = activity;
         this.mChannel = channel;
@@ -70,6 +72,18 @@ public class CityWeatherDetailedFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_city_weather_detailed, container, false);
         ButterKnife.inject(this, view);
+
+        if(savedInstanceState != null){
+            this.mActivity = getActivity();
+            this.mChannel = savedInstanceState.getParcelable("Channel");
+            this.mItem = mChannel.getItem();
+            this.mCondition = mChannel.getItem().getCondition();
+            this.mLocation = mChannel.getLocation();
+            this.mUnits = mChannel.getUnits();
+            mForecastList = mItem.getForecast();
+
+            mForecastAdapter = new ForecastAdapter(mActivity, mForecastList);
+        }
         return view;
     }
 
@@ -84,6 +98,12 @@ public class CityWeatherDetailedFragment extends Fragment {
 
         mRecyclerViewForecast.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false));
         mRecyclerViewForecast.setAdapter(mForecastAdapter);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("Channel", mChannel);
     }
 
     private void transformCodeToIcon(ImageView weatherImage, String code){

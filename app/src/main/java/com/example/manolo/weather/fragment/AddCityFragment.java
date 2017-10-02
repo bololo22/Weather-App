@@ -45,15 +45,18 @@ public class AddCityFragment extends Fragment {
     String city; //= "\"nome, ak\""; //, "
     String queryCities;
 
+    public AddCityFragment(){
+    }
+
     public AddCityFragment(Activity activity){
         this.mActivity = activity;
+        onSearchCityListenerCallBack = (OnSearchCityListener) mActivity;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            onSearchCityListenerCallBack = (OnSearchCityListener) mActivity;
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
@@ -66,7 +69,13 @@ public class AddCityFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_add_city, container, false);
         ButterKnife.inject(this, view);
-        ((App) mActivity.getApplication()).getAppComponent().inject(this);
+
+        if(savedInstanceState != null){
+            searchCityEditText.setText(savedInstanceState.getString("CityToSearch"));
+            mActivity = getActivity();
+        }
+
+        ((App) getActivity().getApplication()).getAppComponent().inject(this);
         return view;
     }
 
@@ -98,6 +107,12 @@ public class AddCityFragment extends Fragment {
                 onSearchCityListenerCallBack.onSearchCityFailListener();
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("CityToSearch", searchCityEditText.getText().toString());
     }
 
     public interface OnSearchCityListener {

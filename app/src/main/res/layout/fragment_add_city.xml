@@ -21,7 +21,9 @@
             android:layout_height="wrap_content"
             android:hint="@string/city"
             android:drawableLeft="@drawable/ic_search_24dp"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:inputType="text"
+            android:imeOptions="actionSearch|flagNoExtractUi" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.FloatingActionButton

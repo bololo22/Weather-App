@@ -2,6 +2,8 @@ package com.example.manolo.weather.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -33,6 +35,10 @@ import timber.log.Timber;
 import util.Settings;
 
 public class MainActivity extends AppCompatActivity implements ShowCitiesWeatherFragment.OnShowCitiesFragmentAddListener, AddCityFragment.OnSearchCityListener {
+    private static final String SHOW_CITIES_WEATHER_FRAGMENT = "ShowCitiesWeatherFragment";
+    private static final String ADD_CITY_FRAGMENT = "AddCityFragment";
+    private static final String CITY_WEATHER_DETAILED_FRAGMENT = "CityWeatherDetailedFragment";
+
     ShowCitiesWeatherFragment showCitiesWeatherFragment;
     AddCityFragment addCityFragment;
     CityWeatherDetailedFragment cityWeatherDetailedFragment;
@@ -51,19 +57,28 @@ public class MainActivity extends AppCompatActivity implements ShowCitiesWeather
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-
         ((App) getApplication()).getAppComponent().inject(this);
         settings = new Settings(this);
-        setShowCitiesWeatherFragment();
+
+        if (savedInstanceState != null){
+            mCitiesList = savedInstanceState.getParcelableArrayList("CitiesList");
+            showCitiesWeatherFragment = (ShowCitiesWeatherFragment) getFragmentManager()
+                    .findFragmentByTag(SHOW_CITIES_WEATHER_FRAGMENT);
+            addCityFragment = (AddCityFragment) getFragmentManager()
+                    .findFragmentByTag(ADD_CITY_FRAGMENT);
+            cityWeatherDetailedFragment = (CityWeatherDetailedFragment) getFragmentManager()
+                    .findFragmentByTag(CITY_WEATHER_DETAILED_FRAGMENT);
+        }else {
+            setShowCitiesWeatherFragment();
+        }
     }
 
     private void setShowCitiesWeatherFragment() {
         showCitiesWeatherFragment = new ShowCitiesWeatherFragment(this);
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.container, showCitiesWeatherFragment)
+                .add(R.id.container, showCitiesWeatherFragment, SHOW_CITIES_WEATHER_FRAGMENT)
                 .commitAllowingStateLoss();
-
         retrieveWeatherFromCitiesSaved();
     }
 
@@ -72,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements ShowCitiesWeather
         addCityFragment = new AddCityFragment(this);
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, addCityFragment)
+                .replace(R.id.container, addCityFragment, ADD_CITY_FRAGMENT)
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
     }
@@ -82,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements ShowCitiesWeather
         cityWeatherDetailedFragment = new CityWeatherDetailedFragment(this, channel);
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, cityWeatherDetailedFragment)
+                .replace(R.id.container, cityWeatherDetailedFragment, CITY_WEATHER_DETAILED_FRAGMENT)
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
     }
@@ -185,5 +200,11 @@ public class MainActivity extends AppCompatActivity implements ShowCitiesWeather
                 }
             });
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putParcelableArrayList("CitiesList", (ArrayList<? extends Parcelable>) mCitiesList);
     }
 }

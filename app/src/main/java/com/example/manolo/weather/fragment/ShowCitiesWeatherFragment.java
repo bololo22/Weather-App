@@ -22,13 +22,14 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import model.Channel;
+import timber.log.Timber;
 
 /**
  * Created by manolofernandez on 9/27/17.
  */
 
 public class ShowCitiesWeatherFragment extends Fragment {
-    OnFABClickListener mOnFABClickListenerCallback;
+    OnShowCitiesFragmentAddListener mOnShowCitiesFragmentAddListenerCallback;
     Activity mActivity;
     List<Channel> mChannelList;
     CitiesAdapter citiesAdapter;
@@ -47,7 +48,10 @@ public class ShowCitiesWeatherFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            mOnFABClickListenerCallback = (OnFABClickListener) mActivity;
+            mOnShowCitiesFragmentAddListenerCallback = (OnShowCitiesFragmentAddListener) mActivity;
+            this.mChannelList = new ArrayList<>();
+            citiesAdapter = new CitiesAdapter(mActivity, mChannelList);
+
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString()
                     + " must implement OnHeadlineSelectedListener");
@@ -60,29 +64,38 @@ public class ShowCitiesWeatherFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view =  inflater.inflate(R.layout.fragment_show_cities_weather, container, false);
         ButterKnife.inject(this, view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mRecyclerView.setAdapter(citiesAdapter);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        citiesAdapter = new CitiesAdapter(mActivity, mChannelList);
-        mRecyclerView.setAdapter(citiesAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        mRecyclerView.setHasFixedSize(true);
     }
 
     @OnClick(R.id.newFloatingActionButton)
     public void onClick(){
-        mOnFABClickListenerCallback.onFABClick();
+        mOnShowCitiesFragmentAddListenerCallback.onAddCityButtonClick();
     }
 
-    public void setRecyclerView(List<Channel> mCitiesList) {
-        mChannelList = mCitiesList;
+    public void updateRecyclerView(List<Channel> mCitiesList) {
+        mChannelList.clear();
+        mChannelList.addAll(mCitiesList);
         citiesAdapter.notifyDataSetChanged();
     }
 
-    public interface OnFABClickListener{
-        void onFABClick();
+    public void setRecyclerView(List<Channel> mCitiesList){
+
+    }
+
+    public interface OnShowCitiesFragmentAddListener {
+        void onAddCityButtonClick();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Timber.d("");
     }
 }

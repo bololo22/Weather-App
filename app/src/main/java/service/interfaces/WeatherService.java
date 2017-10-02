@@ -1,7 +1,10 @@
 package service.interfaces;
 
+import java.util.List;
+
 import model.Channel;
 import model.Response;
+import model.ResponseList;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -18,4 +21,7 @@ public interface WeatherService {
 
     @GET("v1/public/yql")
     Call<Response> getWeather(@Query("q") String queryCities, @Query("format") String format);
+
+    @GET("v1/public/yql")
+    Call<ResponseList> getWeatherList(@Query("q") String queryCities, @Query("format") String format);
 }

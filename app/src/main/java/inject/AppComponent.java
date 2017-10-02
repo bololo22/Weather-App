@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.manolo.weather.App;
 import com.example.manolo.weather.activity.MainActivity;
 import com.example.manolo.weather.fragment.AddCityFragment;
+import com.example.manolo.weather.fragment.ShowCitiesWeatherFragment;
 
 import javax.inject.Singleton;
 
@@ -20,4 +21,5 @@ import service.ServiceModule;
 public interface AppComponent {
     void inject(MainActivity target);
     void inject(AddCityFragment target);
+    void inject(ShowCitiesWeatherFragment target);
 }

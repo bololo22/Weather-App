@@ -86,7 +86,9 @@ public class AddCityFragment extends Fragment {
             @Override
             public void onResponse(Call<model.Response> call, Response<model.Response> response) {
                 if(response != null && response.body() != null && response.body().getQuery() != null) {
-                    onSearchCityListenerCallBack.onSearchCityListener(response.body().getQuery());
+                    onSearchCityListenerCallBack.onSearchCityListener(response.body().getQuery(), city);
+                }else{
+                    onSearchCityListenerCallBack.onSearchCityFailListener();
                 }
             }
 
@@ -99,7 +101,7 @@ public class AddCityFragment extends Fragment {
     }
 
     public interface OnSearchCityListener {
-        void onSearchCityListener(Query response);
+        void onSearchCityListener(Query response, String city);
         void onSearchCityFailListener();
     }
 }
